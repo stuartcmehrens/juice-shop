@@ -3,13 +3,19 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
+    "features": {
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12"
+        }
+    },
     "customizations": {
         "vscode": {
             "extensions": [
                 "eg2.vscode-npm-script",
                 "angular.ng-template",
                 "dbaeumer.vscode-eslint",
-                "stylelint.vscode-stylelint"
+                "stylelint.vscode-stylelint",
+                "Semgrep.semgrep"
             ],
             "settings": {
                 "eslint.workingDirectories": [
@@ -20,5 +26,8 @@
             },
         }
     },
-    "postCreateCommand": "export NG_CLI_ANALYTICS=ci && export NG_FORCE_TTY=false && npm i -g @angular/cli && npm install && unset NG_FORCE_TTY"
+    "postCreateCommand": {
+        "semgrep": "python -m pip install semgrep",
+        "juice-shop": "export NG_CLI_ANALYTICS=ci && export NG_FORCE_TTY=false && npm i -g @angular/cli && npm install && unset NG_FORCE_TTY"
+    }
 }
