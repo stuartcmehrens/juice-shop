@@ -1,0 +1,47 @@
+name: Semgrep
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  npm-install:
+    runs-on: ubuntu-latest
+    container:
+      image: node:18
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --ignore-scripts
+      - run: cd frontend && npm install --ignore-scripts --legacy-peer-deps
+      - uses: actions/upload-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontend/node_modules
+          path: frontend/node_modules
+
+  semgrep:
+    name: semgrep/ci
+    runs-on: ubuntu-latest
+    needs: npm-install
+    container:
+      image: semgrep/semgrep:canary
+    if: (github.actor != 'dependabot[bot]')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontend/node_modules
+          path: frontend/node_modules
+      - run: apk add --no-cache npm
+      - run: semgrep ci --allow-local-builds --json --debug --supply-chain
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
