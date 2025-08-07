@@ -10,7 +10,7 @@ jobs:
   npm-install:
     runs-on: ubuntu-latest
     container:
-      image: node:18
+      image: node:22
     steps:
       - uses: actions/checkout@v4
       - run: npm install --ignore-scripts
