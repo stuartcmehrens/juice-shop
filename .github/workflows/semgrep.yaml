@@ -17,11 +17,11 @@ jobs:
       - run: cd frontend && npm install --ignore-scripts --legacy-peer-deps
       - uses: actions/upload-artifact@v4
         with:
-          name: node_modules
+          name: node-modules
           path: node_modules
       - uses: actions/upload-artifact@v4
         with:
-          name: frontend/node_modules
+          name: frontend-node-modules
           path: frontend/node_modules
 
   semgrep:
@@ -35,11 +35,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: node_modules
+          name: node-modules
           path: node_modules
       - uses: actions/download-artifact@v4
         with:
-          name: frontend/node_modules
+          name: frontend-node-modules
           path: frontend/node_modules
       - run: apk add --no-cache npm
       - run: semgrep ci --allow-local-builds --json --debug --supply-chain
